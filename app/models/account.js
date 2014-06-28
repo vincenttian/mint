@@ -12,7 +12,8 @@ var accountSchema = mongoose.Schema({
     last_updated: String,
     financial_institution_name: String,
     account_type: String,
-    account_name: String
+    account_name: String,
+    id: String
 });
 
 // create the model for users and expose it to our app

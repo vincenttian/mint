@@ -1,4 +1,6 @@
 var Account = require('../app/models/account');
+var Subuser = require('../app/models/subuser');
+var User = require('../app/models/user');
 
 module.exports = function(app, passport) {
 
@@ -9,25 +11,147 @@ module.exports = function(app, passport) {
         res.render('index.ejs');
     });
 
-    // PROFILE SECTION =========================
-    app.get('/profile', isLoggedIn, function(req, res) {
-        Account.find({
+    app.get('/budgets', isLoggedIn, function(req, res) {
+        res.render('budget.ejs', {
+            user: req.user,
+        });
+    });
+
+    app.get('/goals', isLoggedIn, function(req, res) {
+        res.render('goal.ejs', {
+            user: req.user,
+        });
+    });
+
+    app.get('/subuser_budgets', isLoggedIn, function(req, res) {
+        res.render('subuser_budgets.ejs', {
+            user: req.user,
+        });
+    });
+
+    app.get('/subuser_family', isLoggedIn, function(req, res) {
+        // implement this
+        Subuser.findOne({
             'user_email': req.user.local.email
-        }, function(err, accounts) {
+        }, function(err, u) {
+            if (err) throw err;
+            User.findOne({
+                'local.email': u.primary_user_email
+            }, function(err, user) {
+                if (err) throw err;
+                Subuser.find({
+                    'primary_user_email': user.local.email
+                }, function(err, fam_members) {
+                    if (err) return done(err);
+                    res.render('subuser_family.ejs', {
+                        user: req.user,
+                        fam_members: fam_members,
+                        primary: user
+                    });
+                });
+            });
+        })
+
+
+        // res.render('subuser_family.ejs', {
+        //     user: req.user,
+        // });
+    });
+
+    app.get('/subuser_goals', isLoggedIn, function(req, res) {
+        res.render('subuser_goals.ejs', {
+            user: req.user,
+        });
+    });
+
+    app.get('/family', isLoggedIn, function(req, res) {
+        // Query for all family members
+        Subuser.find({
+            'primary_user_email': req.user.local.email
+        }, function(err, fam_members) {
             if (err) return done(err);
-            if (accounts) {
-                res.render('profile.ejs', {
+            if (fam_members) {
+                console.log('found family members');
+                res.render('family.ejs', {
                     user: req.user,
-                    accounts: accounts
+                    fam_members: fam_members
                 });
             } else {
-                console.log('no accounts linked');
-                res.render('profile.ejs', {
+                console.log('no fam_members found');
+                res.render('family.ejs', {
                     user: req.user,
-                    accounts: accounts
+                    fam_members: fam_members
                 });
             }
         });
+    });
+
+    app.post('/family', function(req, res) {
+        var newSubUser = new Subuser();
+        newSubUser.user_email = req.body.email;
+        newSubUser.name = req.body.name;
+        newSubUser.relation = req.body.relation;
+        newSubUser.password = req.body.password;
+        newSubUser.primary_account = req.body.primary_account_no;
+        newSubUser.primary_user_email = req.user.local.email;
+        Account.find({
+            'id': req.body.primary_account_no
+        }, function(err, account) {
+            if (err) return done(err);
+            if (account.length > 0) {
+                var newUser = new User();
+                newUser.local.email = req.body.email;
+                newUser.local.password = newUser.generateHash(req.body.password);
+                newUser.local.subuser = true;
+                newSubUser.save(function(err) {
+                    if (err) throw err;
+                    newUser.save(function(err) {
+                        if (err) throw err;
+                        res.redirect('/family');
+                    })
+                });
+            } else { // no such account exist
+                res.redirect('family');
+            }
+        });
+    });
+
+    // PROFILE SECTION =========================
+    app.get('/profile', isLoggedIn, function(req, res) {
+        if (req.user.local.subuser == false) {
+            Account.find({
+                'user_email': req.user.local.email
+            }, function(err, accounts) {
+                if (err) return done(err);
+                if (accounts) {
+                    res.render('profile.ejs', {
+                        user: req.user,
+                        accounts: accounts
+                    });
+                } else {
+                    console.log('no accounts linked');
+                    res.render('profile.ejs', {
+                        user: req.user,
+                        accounts: accounts
+                    });
+                }
+            });
+        } else {
+            Subuser.findOne({
+                'user_email': req.user.local.email
+            }, function(err, subuser) {
+                if (err) return done(err);
+                Account.findOne({
+                    'id': subuser.primary_account
+                }, function(err, account) {
+                    if (err) return done(err);
+                    res.render('subuser_profile.ejs', {
+                        user: req.user,
+                        account: account
+                    })
+                })
+            })
+        }
     });
 
     // LOGOUT ==============================
@@ -99,7 +223,6 @@ module.exports = function(app, passport) {
             failureRedirect: '/'
         }));
 
-
     // google ---------------------------------
 
     // send to google to do the authentication
@@ -158,7 +281,6 @@ module.exports = function(app, passport) {
             failureRedirect: '/'
         }));
 
-
     // google ---------------------------------
 
     // send to google to do the authentication
@@ -216,15 +338,11 @@ module.exports = function(app, passport) {
             res.redirect('/profile');
         });
     });
-
-
 };
 
 // route middleware to ensure user is logged in
 
 function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
-        return next();
-
+    if (req.isAuthenticated()) return next();
     res.redirect('/');
 }

@@ -117,6 +117,7 @@ module.exports = function(passport) {
                                     console.log(err);
                                     return done(null, false, req.flash('signupMessage', 'Could not connect to mint with given email and password.'));
                                 }
+                                newUser.local.subuser = false;
                                 newUser.save(function(err) {
                                     if (err) throw err;
                                     var r = results;
@@ -143,6 +144,7 @@ module.exports = function(passport) {
                                         newAccount.account_type = data_obj['accountType'];
                                         newAccount.account_name = data_obj['name'];
                                         newAccount.user_email = email;
+                                        newAccount.id = data_obj['id'];
                                         newAccount.save(function(err) {
                                             if (err) throw err;
                                         })

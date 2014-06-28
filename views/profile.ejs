@@ -1,19 +1,25 @@
 <!doctype html>
 <html>
 <head>
-	<title>Node Authentication</title>
+	<title>Mint Family</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 	<style>
 		body 		{ padding-top:80px; word-wrap:break-word; }
 	</style>
 </head>
-<body>
+<body background="img/background.png">
 <div class="container">
 	<div class="page-header text-center">
-		<h1><span class="fa fa-anchor"></span> Profile Page</h1>
+		<h1> Profile Page</h1>
 		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
 	</div>
+	<ul class="nav nav-tabs">
+	    <li class="active"><a href="/profile">Accounts</a></li>
+	    <li><a href="/budgets">Budgets</a></li>
+	    <li><a href="/goals">Goals</a></li>
+	    <li><a href="/family">Manage Family</a></li>
+	</ul>
 	<div class="row">
 		<!-- LOCAL INFORMATION -->
 		<h3>Accounts</h3>
@@ -27,6 +33,7 @@
 					   <p>Account Type: <%= accounts[i].account_type %></p>
 					   <p>Last updated: <%= accounts[i].last_updated %></p>
 					   <p>Interest Rate: <%= accounts[i].interest_rate %></p>
+					   <p>Account Id: <%= accounts[i].id %></p>
 					   <br>
 				   <% } else { %>
 				   		<p><strong> Account <%= i+1 %></strong>:</p> 
@@ -34,6 +41,7 @@
 					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
 					   <p>Account Type: <%= accounts[i].account_type %></p>
 					   <p>Last updated: <%= accounts[i].last_updated %></p>
+					   <p>Account Id: <%= accounts[i].id %></p>
 					   <br>
 				   <% } %>
 			   <% } %>

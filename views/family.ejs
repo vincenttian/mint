@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+	<title>Mint Family</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+</head>
+<body background="img/background.png">
+<div class="container">
+	<div class="page-header text-center">
+		<h1> Profile Page</h1>
+		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+	</div>
+	<ul class="nav nav-tabs">
+	    <li><a href="/profile">Accounts</a></li>
+	    <li><a href="/budgets">Budgets</a></li>
+	    <li><a href="/goals">Goals</a></li>
+	    <li class="active"><a href="/family">Manage Family</a></li>
+	</ul>
+	<div class="row">
+		<h3>Family Stuff</h3>
+		<br>
+		<strong>Primary:</strong> <%= user.local.email %>
+		<br><br>
+		Family Members:
+		<br><br>
+	
+		<% for(var i=0; i<fam_members.length; i++) {%>
+		   <p><strong> Name:</strong> <%= fam_members[i].name %></p> 
+		   <p>Relation: <%= fam_members[i].relation %></p>
+		   <p>user_email: <%= fam_members[i].user_email %></p>
+		   <p>primary_account: <%= fam_members[i].primary_account %></p>
+		   <br>
+		<% } %>
+
+		<form action="http://127.0.0.1:3000/family" method="post">
+			<label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter full name" required/>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter email address" required/>
+            <br>
+            <label for="relation">Relation:</label>
+            <input type="text" id="relation" name="relation" placeholder="Enter relation" required/>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required/>
+            <br>
+            <label for="primary_account_no">Account Number::</label>
+            <input type="text" id="primary_account_no" name="primary_account_no" placeholder="Enter a account number" required/>
+            <br>
+            <input type="submit" value="Add family member" />
+		</form>
+	</div>
+</div>
+</body>
+</html>

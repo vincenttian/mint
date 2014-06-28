@@ -24,6 +24,7 @@ app.use(bodyParser()); // get information from html forms
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
+app.use(express.static(__dirname + "/public"));
 app.use(session({
     secret: 'vincenttiannodeauthentication'
 })); // session secret
@@ -40,28 +41,38 @@ console.log('The magic happens on port ' + port);
 
 // database ====================================================================
 
-// Development
-// mongoose.connect("mongodb://localhost:27017/mint");
+// Development to seed prod database
+// var dev_seed_prod = 'mongodb://heroku_app26861824:j34qq9lk4u8v3n6avl7p3nu4en@ds043467.mongolab.com:43467/heroku_app26861824';
+// mongoose.connect(dev_seed_prod);
 // var MongoClient = require('mongodb').MongoClient;
-// MongoClient.connect("mongodb://localhost:27017/mint", function(err, db) {
+// MongoClient.connect(dev_seed_prod, function(err, db) {
 //     if (!err) {
 //         console.log("MongoDB is connected");
 //     }
 // });
 
-// Production
-var mongoUri = process.env.MONGOLAB_URI ||
-    process.env.MONGOHQ_URL ||
-    'mongodb://localhost:27017/mint';
-console.log(mongoUri);
-mongoose.connect(mongoUri);
-var mongo = require('mongodb');
-mongo.Db.connect(mongoUri, function(err, db) {
-    db.collection('mydocs', function(er, collection) {
-        collection.insert({
-            'mykey': 'myvalue'
-        }, {
-            safe: true
-        }, function(er, rs) {});
-    });
+// Development
+mongoose.connect("mongodb://localhost:27017/mint");
+var MongoClient = require('mongodb').MongoClient;
+MongoClient.connect("mongodb://localhost:27017/mint", function(err, db) {
+    if (!err) {
+        console.log("MongoDB is connected");
+    }
 });
+
+// Production
+// var mongoUri = process.env.MONGOLAB_URI ||
+//     process.env.MONGOHQ_URL ||
+//     'mongodb://localhost:27017/mint';
+// console.log(mongoUri);
+// mongoose.connect(mongoUri);
+// var mongo = require('mongodb');
+// mongo.Db.connect(mongoUri, function(err, db) {
+//     db.collection('mydocs', function(er, collection) {
+//         collection.insert({
+//             'mykey': 'myvalue'
+//         }, {
+//             safe: true
+//         }, function(er, rs) {});
+//     });
+// });

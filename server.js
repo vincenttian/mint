@@ -39,10 +39,28 @@ app.listen(port);
 console.log('The magic happens on port ' + port);
 
 // database ====================================================================
-mongoose.connect("mongodb://localhost:27017/mint");
-var MongoClient = require('mongodb').MongoClient;
-MongoClient.connect("mongodb://localhost:27017/mint", function(err, db) {
-    if (!err) {
-        console.log("MongoDB is connected");
-    }
+
+// Development
+// mongoose.connect("mongodb://localhost:27017/mint");
+// var MongoClient = require('mongodb').MongoClient;
+// MongoClient.connect("mongodb://localhost:27017/mint", function(err, db) {
+//     if (!err) {
+//         console.log("MongoDB is connected");
+//     }
+// });
+
+// Production
+var mongoUri = process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
+    'mongodb://localhost/mydb';
+mongoose.connect(mongoUri);
+var mongo = require('mongodb');
+mongo.Db.connect(mongoUri, function(err, db) {
+    db.collection('mydocs', function(er, collection) {
+        collection.insert({
+            'mykey': 'myvalue'
+        }, {
+            safe: true
+        }, function(er, rs) {});
+    });
 });

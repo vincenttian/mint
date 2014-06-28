@@ -21,14 +21,16 @@
 			<% for(var i=0; i<accounts.length; i++) {%>
 			   <%if (accounts[i].value != "0" && accounts[i].isActive == 'true') { %>
 				   <%if (accounts[i].interest_rate != "none") { %>
-					   <p>Account: <%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
+					   <p><strong> Account <%= i+1 %></strong>:</p> 
+					   <p><%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
 					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
 					   <p>Account Type: <%= accounts[i].account_type %></p>
 					   <p>Last updated: <%= accounts[i].last_updated %></p>
 					   <p>Interest Rate: <%= accounts[i].interest_rate %></p>
 					   <br>
 				   <% } else { %>
-				   		<p>Account: <%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
+				   		<p><strong> Account <%= i+1 %></strong>:</p> 
+				   		<p><%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
 					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
 					   <p>Account Type: <%= accounts[i].account_type %></p>
 					   <p>Last updated: <%= accounts[i].last_updated %></p>

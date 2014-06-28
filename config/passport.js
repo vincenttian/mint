@@ -106,7 +106,6 @@ module.exports = function(passport) {
                             var PythonShell = require('python-shell');
                             var path = require('path');
                             var filePath = path.join(__dirname, '');
-                            console.log(filePath);
                             var options = {
                                 scriptPath: filePath,
                                 // scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',

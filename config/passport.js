@@ -104,8 +104,11 @@ module.exports = function(passport) {
                             newUser.local.password = newUser.generateHash(password);
 
                             var PythonShell = require('python-shell');
+                            var path = require('path');
+                            var filePath = path.join(__dirname, '');
+                            console.log(filePath);
                             var options = {
-                                scriptPath: '/public',
+                                scriptPath: filePath,
                                 // scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',
                                 args: [email, password]
                             };

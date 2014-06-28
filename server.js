@@ -24,7 +24,6 @@ app.use(bodyParser()); // get information from html forms
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
-app.use(express.static(__dirname + "/public"));
 app.use(session({
     secret: 'vincenttiannodeauthentication'
 })); // session secret

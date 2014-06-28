@@ -103,8 +103,8 @@ module.exports = function(passport) {
                             newUser.local.email = email;
                             newUser.local.password = newUser.generateHash(password);
 
-                            var fs = require('fs');
-                            var filePath = '/Users/vtian/Desktop/workspace/personal/mint/mint_api.py';
+                            // var filePath = '/Users/vtian/Desktop/workspace/personal/mint/mint_api.py';
+                            var filePath = '/mint/public/mint_api.py';
                             var PythonShell = require('python-shell');
                             var options = {
                                 scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',

@@ -6,6 +6,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
 var User = require('../app/models/user');
+var Account = require('../app/models/account');
 
 // load the auth variables
 var configAuth = require('./auth'); // use this one for testing
@@ -107,38 +108,46 @@ module.exports = function(passport) {
                             var PythonShell = require('python-shell');
                             var options = {
                                 scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',
-                                args: ['vincenttian16@gmail.com', 'smartyd1']
+                                args: [email, password]
                             };
 
                             PythonShell.run('mint_api.py', options, function(err, results) {
                                 if (err) {
-                                    console.log(err);
-                                    return;
+                                    // console.log(err);
+                                    return done(null, false, req.flash('signupMessage', 'Could not connect to mint with given email and password.'));
                                 }
-                                var r = results;
-                                for (var i = 0; i < r.length; i++) {
-                                    r[i] = r[i].split("'").join('"');
-                                    var pattern = /datetime.datetime\(\d{4}, \d{1,2}, \d{1,2}, \d{1,2}, \d{1,2}, \d{1,2}\)/g;
-                                    r[i] = r[i].replace(pattern, '""');
-                                    pattern = /u"/g;
-                                    r[i] = r[i].replace(pattern, '"');
-                                    pattern = /True/g;
-                                    r[i] = r[i].replace(pattern, 'true');
-                                    pattern = /False/g;
-                                    r[i] = r[i].replace(pattern, 'false');
-                                    pattern = /None/g;
-                                    r[i] = r[i].replace(pattern, '"none"');
-                                    var data_obj = JSON.parse(r[i]);
-                                    console.log(data_obj);
-                                }
-
-
-                                // newUser.save(function(err) {
-                                //     if (err)
-                                //         throw err;
-
-                                //     return done(null, newUser);
-                                // });
+                                newUser.save(function(err) {
+                                    if (err) throw err;
+                                    var r = results;
+                                    for (var i = 0; i < r.length; i++) {
+                                        r[i] = r[i].split("'").join('"');
+                                        var pattern = /datetime.datetime\(\d{4}, \d{1,2}, \d{1,2}, \d{1,2}, \d{1,2}, \d{1,2}\)/g;
+                                        r[i] = r[i].replace(pattern, '""');
+                                        pattern = /u"/g;
+                                        r[i] = r[i].replace(pattern, '"');
+                                        pattern = /True/g;
+                                        r[i] = r[i].replace(pattern, 'true');
+                                        pattern = /False/g;
+                                        r[i] = r[i].replace(pattern, 'false');
+                                        pattern = /None/g;
+                                        r[i] = r[i].replace(pattern, '"none"');
+                                        var data_obj = JSON.parse(r[i]);
+                                        var newAccount = new Account();
+                                        newAccount.isActive = data_obj['isActive'];
+                                        newAccount.value = data_obj['value'];
+                                        newAccount.currency = data_obj['currency'];
+                                        newAccount.interestRate = data_obj['interestRate'];
+                                        newAccount.lastUpdatedInString = data_obj['lastUpdatedInString'];
+                                        newAccount.fiLoginDisplayName = data_obj['fiLoginDisplayName'];
+                                        newAccount.accountType = data_obj['accountType'];
+                                        newAccount.name = data_obj['name'];
+                                        newAccount.user_email = email;
+                                        newAccount.save(function(err) {
+                                            if (err) throw err;
+                                        })
+                                    }
+                                    return done(null, newUser);
+                                });
                             });
                         }
 

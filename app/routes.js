@@ -1,3 +1,5 @@
+var Account = require('../app/models/account');
+
 module.exports = function(app, passport) {
 
     // normal routes ===============================================================
@@ -9,8 +11,22 @@ module.exports = function(app, passport) {
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
-            user: req.user
+        Account.find({
+            'user_email': req.user.local.email
+        }, function(err, accounts) {
+            if (err) return done(err);
+            if (accounts) {
+                res.render('profile.ejs', {
+                    user: req.user,
+                    accounts: accounts
+                });
+            } else {
+                console.log('no accounts linked');
+                res.render('profile.ejs', {
+                    user: req.user,
+                    accounts: accounts
+                });
+            }
         });
     });
 

@@ -16,6 +16,29 @@
 	</div>
 	<div class="row">
 		<!-- LOCAL INFORMATION -->
+		<h3>Accounts</h3>
+		<div class="col-sm-9">
+			<% for(var i=0; i<accounts.length; i++) {%>
+			   <%if (accounts[i].value != "0" && accounts[i].isActive == 'true') { %>
+				   <%if (accounts[i].interest_rate != "none") { %>
+					   <p>Account: <%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
+					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
+					   <p>Account Type: <%= accounts[i].account_type %></p>
+					   <p>Last updated: <%= accounts[i].last_updated %></p>
+					   <p>Interest Rate: <%= accounts[i].interest_rate %></p>
+					   <br>
+				   <% } else { %>
+				   		<p>Account: <%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
+					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
+					   <p>Account Type: <%= accounts[i].account_type %></p>
+					   <p>Last updated: <%= accounts[i].last_updated %></p>
+					   <br>
+				   <% } %>
+			   <% } %>
+			<% } %>
+		</div>
+
+		<!--
 		<div class="col-sm-6">
 			<div class="well">
 				<h3><span class="fa fa-user"></span> Local</h3>
@@ -31,11 +54,9 @@
 				<% } %>
 			</div>
 		</div>
-		<!-- FACEBOOK INFORMATION -->
 		<div class="col-sm-6">
 			<div class="well">
 				<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-				<!-- check if the user has this token (is the user authenticated with this social account) -->
 				<% if (user.facebook.token) { %>
 					<p>
 						<strong>id</strong>: <%= user.facebook.id %><br>
@@ -49,9 +70,10 @@
 				<% } %>
 			</div>
 		</div>
+		-->
 	</div>
+	<!--
 	<div class="row">
-		<!-- TWITTER INFORMATION -->
 		<div class="col-sm-6">
 			<div class="well">
 				<h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
@@ -69,11 +91,9 @@
 
 			</div>
 		</div>
-		<!-- GOOGLE INFORMATION -->
 		<div class="col-sm-6">
 			<div class="well">
 				<h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
-
 				<% if (user.google.token) { %>
 					<p>
 						<strong>id</strong>: <%= user.google.id %><br>
@@ -81,14 +101,13 @@
 						<strong>email</strong>: <%= user.google.email %><br>
 						<strong>name</strong>: <%= user.google.name %>
 					</p>
-
 					<a href="/unlink/google" class="btn btn-danger">Unlink</a>
 				<% } else { %>
 					<a href="/connect/google" class="btn btn-danger">Connect Google</a>
 				<% } %>
-
 			</div>
 		</div>
+		-->
 	</div>
 </div>
 </body>

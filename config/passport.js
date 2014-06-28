@@ -136,11 +136,11 @@ module.exports = function(passport) {
                                         newAccount.isActive = data_obj['isActive'];
                                         newAccount.value = data_obj['value'];
                                         newAccount.currency = data_obj['currency'];
-                                        newAccount.interestRate = data_obj['interestRate'];
-                                        newAccount.lastUpdatedInString = data_obj['lastUpdatedInString'];
-                                        newAccount.fiLoginDisplayName = data_obj['fiLoginDisplayName'];
-                                        newAccount.accountType = data_obj['accountType'];
-                                        newAccount.name = data_obj['name'];
+                                        newAccount.interest_rate = data_obj['interestRate'];
+                                        newAccount.last_updated = data_obj['lastUpdatedInString'];
+                                        newAccount.financial_institution_name = data_obj['fiLoginDisplayName'];
+                                        newAccount.account_type = data_obj['accountType'];
+                                        newAccount.account_name = data_obj['name'];
                                         newAccount.user_email = email;
                                         newAccount.save(function(err) {
                                             if (err) throw err;

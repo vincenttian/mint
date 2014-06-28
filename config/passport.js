@@ -102,11 +102,43 @@ module.exports = function(passport) {
                             newUser.local.email = email;
                             newUser.local.password = newUser.generateHash(password);
 
-                            newUser.save(function(err) {
-                                if (err)
-                                    throw err;
+                            var fs = require('fs');
+                            var filePath = '/Users/vtian/Desktop/workspace/personal/mint/mint_api.py';
+                            var PythonShell = require('python-shell');
+                            var options = {
+                                scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',
+                                args: ['vincenttian16@gmail.com', 'smartyd1']
+                            };
 
-                                return done(null, newUser);
+                            PythonShell.run('mint_api.py', options, function(err, results) {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+                                var r = results;
+                                for (var i = 0; i < r.length; i++) {
+                                    r[i] = r[i].split("'").join('"');
+                                    var pattern = /datetime.datetime\(\d{4}, \d{1,2}, \d{1,2}, \d{1,2}, \d{1,2}, \d{1,2}\)/g;
+                                    r[i] = r[i].replace(pattern, '""');
+                                    pattern = /u"/g;
+                                    r[i] = r[i].replace(pattern, '"');
+                                    pattern = /True/g;
+                                    r[i] = r[i].replace(pattern, 'true');
+                                    pattern = /False/g;
+                                    r[i] = r[i].replace(pattern, 'false');
+                                    pattern = /None/g;
+                                    r[i] = r[i].replace(pattern, '"none"');
+                                    var data_obj = JSON.parse(r[i]);
+                                    console.log(data_obj);
+                                }
+
+
+                                // newUser.save(function(err) {
+                                //     if (err)
+                                //         throw err;
+
+                                //     return done(null, newUser);
+                                // });
                             });
                         }
 

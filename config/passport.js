@@ -103,17 +103,16 @@ module.exports = function(passport) {
                             newUser.local.email = email;
                             newUser.local.password = newUser.generateHash(password);
 
-                            // var filePath = '/Users/vtian/Desktop/workspace/personal/mint/mint_api.py';
-                            var filePath = '/mint/public/mint_api.py';
                             var PythonShell = require('python-shell');
                             var options = {
-                                scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',
+                                scriptPath: '/public',
+                                // scriptPath: '/Users/vtian/Desktop/workspace/personal/mint',
                                 args: [email, password]
                             };
 
                             PythonShell.run('mint_api.py', options, function(err, results) {
                                 if (err) {
-                                    // console.log(err);
+                                    console.log(err);
                                     return done(null, false, req.flash('signupMessage', 'Could not connect to mint with given email and password.'));
                                 }
                                 newUser.save(function(err) {

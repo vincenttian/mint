@@ -4,121 +4,149 @@
 	<title>Mint Family</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<style>
 		body 		{ padding-top:80px; word-wrap:break-word; }
 	</style>
 </head>
 <body background="img/background.png">
-<div class="container">
-	<div class="page-header text-center">
-		<h1> Profile Page</h1>
-		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+	<div class="container">
+		<div class="page-header text-center">
+			<h1> Profile Page</h1>
+			<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+		</div>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="/profile">Accounts</a></li>
+			<li><a href="/budgets">Budgets</a></li>
+			<li><a href="/goals">Goals</a></li>
+			<li><a href="/family">Manage Family</a></li>
+		</ul>
+		<div class="row">
+			<!-- LOCAL INFORMATION -->
+			<h3>Accounts</h3>
+			<div class="col-sm-9">
+				<% for(var i=0; i<accounts.length; i++) {%>
+				<%if (accounts[i].value != "0" && accounts[i].isActive == 'true') { %>
+				<div class="row">
+					<%if (accounts[i].interest_rate != "none") { %>
+					<div class="col-md-1"> </div>
+					<div class="col-md-5">
+						<p><strong> Account <%= i+1 %></strong>:</p> 
+						<p><%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
+						<p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
+						<p>Account Type: <%= accounts[i].account_type %></p>
+						<p>Last updated: <%= accounts[i].last_updated %></p>
+						<p>Interest Rate: <%= accounts[i].interest_rate %></p>
+						<p>Account Id: <%= accounts[i].id %></p>
+					</div>
+					<div class="col-md-5">
+						<div id="chart_<%= i+1 %>">
+							<span class="chart_info">Shopping:
+								<span style="color: #0096ff;" id='pie_shopping_<%= i+1 %>'>10</span>
+								<br>
+								Food & Dining:
+								<span style="color: #AAAAAA;" id='pie_food_<%= i+1 %>'>8</span>
+								<br>
+								<span id="total_<%= i+1 %>"> Total: <%= accounts[i].value %> </span>
+							</span>
+						</div>
+					</div>
+					<% } else { %>
+					<div class="col-md-1"> </div>
+					<div class="col-md-5">
+						<p><strong> Account <%= i+1 %></strong>:</p> 
+						<p><%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
+						<p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
+						<p>Account Type: <%= accounts[i].account_type %></p>
+						<p>Last updated: <%= accounts[i].last_updated %></p>
+						<p>Account Id: <%= accounts[i].id %></p>
+					</div>
+					<div class="col-md-5">
+						<span id="chart_<%= i+1 %>">Shopping:
+							<span style="color: #0096ff;" id='pie_shopping_<%= i+1 %>'>10</span>
+							<br></br>
+							<br>
+							Food & Dining:
+							<span style="color: #AAAAAA;" id='pie_food_<%= i+1 %>'>8</span>
+							<br>
+							<span id="total_<%= i+1 %>"> Total: <%= accounts[i].value %> </span>
+						</span>
+					</div>
+					<% } %>
+				</div>
+				<% } %>
+				<% } %>
+			</div>
+		</div>
 	</div>
-	<ul class="nav nav-tabs">
-	    <li class="active"><a href="/profile">Accounts</a></li>
-	    <li><a href="/budgets">Budgets</a></li>
-	    <li><a href="/goals">Goals</a></li>
-	    <li><a href="/family">Manage Family</a></li>
-	</ul>
-	<div class="row">
-		<!-- LOCAL INFORMATION -->
-		<h3>Accounts</h3>
-		<div class="col-sm-9">
-			<% for(var i=0; i<accounts.length; i++) {%>
-			   <%if (accounts[i].value != "0" && accounts[i].isActive == 'true') { %>
-				   <%if (accounts[i].interest_rate != "none") { %>
-					   <p><strong> Account <%= i+1 %></strong>:</p> 
-					   <p><%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
-					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
-					   <p>Account Type: <%= accounts[i].account_type %></p>
-					   <p>Last updated: <%= accounts[i].last_updated %></p>
-					   <p>Interest Rate: <%= accounts[i].interest_rate %></p>
-					   <p>Account Id: <%= accounts[i].id %></p>
-					   <br>
-				   <% } else { %>
-				   		<p><strong> Account <%= i+1 %></strong>:</p> 
-				   		<p><%= accounts[i].account_name %> at <%= accounts[i].financial_institution_name %></p>
-					   <p>Amount: <%= accounts[i].value %> <%= accounts[i].currency %></p>
-					   <p>Account Type: <%= accounts[i].account_type %></p>
-					   <p>Last updated: <%= accounts[i].last_updated %></p>
-					   <p>Account Id: <%= accounts[i].id %></p>
-					   <br>
-				   <% } %>
-			   <% } %>
-			<% } %>
-		</div>
-
-		<!--
-		<div class="col-sm-6">
-			<div class="well">
-				<h3><span class="fa fa-user"></span> Local</h3>
-				<% if (user.local.email) { %>
-					<p>
-						<strong>id</strong>: <%= user._id %><br>
-						<strong>email</strong>: <%= user.local.email %><br>
-						<strong>password</strong>: <%= user.local.password %>
-					</p>
-					<a href="/unlink/local" class="btn btn-default">Unlink</a>
-				<% } else { %>
-					<a href="/connect/local" class="btn btn-default">Connect Local</a>
-				<% } %>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="well">
-				<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-				<% if (user.facebook.token) { %>
-					<p>
-						<strong>id</strong>: <%= user.facebook.id %><br>
-						<strong>token</strong>: <%= user.facebook.token %><br>
-						<strong>email</strong>: <%= user.facebook.email %><br>
-						<strong>name</strong>: <%= user.facebook.name %><br>
-					</p>
-					<a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
-				<% } else { %>
-					<a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
-				<% } %>
-			</div>
-		</div>
-		-->
-	</div>
-	<!--
-	<div class="row">
-		<div class="col-sm-6">
-			<div class="well">
-				<h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-				<% if (user.twitter.token) { %>
-					<p>
-						<strong>id</strong>: <%= user.twitter.id %><br>
-						<strong>token</strong>: <%= user.twitter.token %><br>
-						<strong>display name</strong>: <%= user.twitter.displayName %><br>
-						<strong>username</strong>: <%= user.twitter.username %>
-					</p>
-					<a href="/unlink/twitter" class="btn btn-info">Unlink</a>
-				<% } else { %>
-					<a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
-				<% } %>
-
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="well">
-				<h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
-				<% if (user.google.token) { %>
-					<p>
-						<strong>id</strong>: <%= user.google.id %><br>
-						<strong>token</strong>: <%= user.google.token %><br>
-						<strong>email</strong>: <%= user.google.email %><br>
-						<strong>name</strong>: <%= user.google.name %>
-					</p>
-					<a href="/unlink/google" class="btn btn-danger">Unlink</a>
-				<% } else { %>
-					<a href="/connect/google" class="btn btn-danger">Connect Google</a>
-				<% } %>
-			</div>
-		</div>
-		-->
-	</div>
-</div>
 </body>
+<script> 
+
+	for (var i=0; i< <%- accounts.length %>; i++) {
+		var total = $('#total_' + (i+1)).text().split(' ')[2];
+		if (total == null) {
+			break;
+		}
+
+		total = Number(total);
+		function getRandomInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		var x = Math.ceil(getRandomInt(total/7, total*6/7)/100)*100;
+
+		var data = [ {name: "shopping", value: x},
+		{name: "food", value:  total-x} ];
+
+		var set_shopping = document.getElementById('pie_shopping_' + (i+1).toString());
+		var set_food = document.getElementById('pie_food_' + (i+1).toString());
+		set_shopping.innerHTML = x.toString();
+		set_food.innerHTML = (total-x).toString()
+
+		var width = 362,
+		height = 384,
+		radius = Math.min(width, height) / 2;
+
+		var chart = d3.select("#chart_" + (i+1))
+		.append('svg')
+		.attr("width", width)
+		.attr("height", height)
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + 96 + ")");
+
+		var radius = Math.min(width, height) / 2;
+
+		var color = d3.scale.ordinal()
+		.range(["#0096ff", "#CCC"]);
+
+		var arc = d3.svg.arc()
+		.outerRadius(radius - 85)
+		.innerRadius(radius - 110);
+
+		var pie = d3.layout.pie()
+		.sort(null)
+		.startAngle(1.1*Math.PI)
+		.endAngle(3.1*Math.PI)
+		.value(function(d) { return d.value; });
+
+		var g = chart.selectAll(".arc")
+		.data(pie(data))
+		.enter().append("g")
+		.attr("class", "arc");
+
+		g.append("path")
+		.style("fill", function(d) { return color(d.data.name); })
+		.style("stroke", "#fff")
+		.style("stroke-width", "3px")
+		.transition().delay(function(d, i) { return i * 500; }).duration(1000)
+		.attrTween('d', function(d) {
+			var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+			return function(t) {
+				d.endAngle = i(t);
+				return arc(d);
+			}
+		});
+	}
+</script>
 </html>

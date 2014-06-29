@@ -12,14 +12,40 @@ module.exports = function(app, passport) {
     });
 
     app.get('/budgets', isLoggedIn, function(req, res) {
-        res.render('budget.ejs', {
-            user: req.user,
+        Subuser.find({
+            'primary_user_email': req.user.local.email
+        }, function(err, fam_members) {
+            if (err) return done(err);
+            if (fam_members) {
+                Account.find({
+                    'user_email': req.user.local.email
+                }, function(err, accounts) {
+                    res.render('budget.ejs', {
+                        user: req.user,
+                        fam_members: fam_members,
+                        accounts: JSON.stringify(accounts)
+                    });
+                });
+            }
         });
     });
 
     app.get('/goals', isLoggedIn, function(req, res) {
-        res.render('goal.ejs', {
-            user: req.user,
+        Subuser.find({
+            'primary_user_email': req.user.local.email
+        }, function(err, fam_members) {
+            if (err) return done(err);
+            if (fam_members) {
+                Account.find({
+                    'user_email': req.user.local.email
+                }, function(err, accounts) {
+                    res.render('goal.ejs', {
+                        user: req.user,
+                        fam_members: fam_members,
+                        accounts: JSON.stringify(accounts)
+                    });
+                });
+            }
         });
     });
 

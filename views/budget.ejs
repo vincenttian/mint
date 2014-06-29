@@ -9,6 +9,7 @@
 	</style>
 </head>
 <body background="img/background.png">
+Welcome, <%= user.local.email %>
 <div class="container">
 	<div class="page-header text-center">
 		<h1> Profile Page</h1>
@@ -22,7 +23,31 @@
 	</ul>
 	<div class="row">
 		<h3>Budget Stuff</h3>
+		<% for(var i=0; i<fam_members.length; i++) {%>
+			<div class="row">
+				<div class="col-md-6">
+				   <p><strong> Name:</strong> <%= fam_members[i].name %></p> 
+				   <p>Relation: <%= fam_members[i].relation %></p>
+				   <p>user_email: <%= fam_members[i].user_email %></p>
+				   <p>primary_account ID: <%= fam_members[i].primary_account %></p>
+				   <p>primary_account: <%= fam_members[i].primary_account_name %></p>
+				   <br>
+				</div>
+				<div class="col-md-6">
+					<a href="/budgets"> 
+						Set budgets for <%= fam_members[i].name %>
+					</a>
+				</div>
+			</div>
+		<% } %>
 	</div>
 </div>
 </body>
+<script>
+
+var accounts = <%- accounts %>;
+console.log(accounts);
+
+
+</script>
 </html>

@@ -141,6 +141,7 @@ module.exports = function(app, passport) {
                 'user_email': req.user.local.email
             }, function(err, subuser) {
                 if (err) return done(err);
+                console.log(subuser);
                 Account.findOne({
                     'id': subuser.primary_account
                 }, function(err, account) {

@@ -34,7 +34,10 @@ module.exports = function(app, passport) {
         Subuser.findOne({
             'user_email': req.user.local.email
         }, function(err, u) {
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                return;
+            }
             User.findOne({
                 'local.email': u.primary_user_email
             }, function(err, user) {
@@ -72,9 +75,14 @@ module.exports = function(app, passport) {
             if (err) return done(err);
             if (fam_members) {
                 console.log('found family members');
-                res.render('family.ejs', {
-                    user: req.user,
-                    fam_members: fam_members
+                Account.find({
+                    'user_email': req.user.local.email
+                }, function(err, accounts) {
+                    res.render('family.ejs', {
+                        user: req.user,
+                        fam_members: fam_members,
+                        accounts: JSON.stringify(accounts)
+                    });
                 });
             } else {
                 console.log('no fam_members found');
@@ -86,16 +94,18 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/family', function(req, res) {
+    app.post('/family', isLoggedIn, function(req, res) {
         var newSubUser = new Subuser();
         newSubUser.user_email = req.body.email;
         newSubUser.name = req.body.name;
         newSubUser.relation = req.body.relation;
         newSubUser.password = req.body.password;
-        newSubUser.primary_account = req.body.primary_account_no;
         newSubUser.primary_user_email = req.user.local.email;
+        var account = req.body.account_no.split(':');
+        newSubUser.primary_account = account[0];
+        newSubUser.primary_account_name = account[1] + ': ' + account[2];
         Account.find({
-            'id': req.body.primary_account_no
+            'id': account[0]
         }, function(err, account) {
             if (err) return done(err);
             if (account.length > 0) {
@@ -107,10 +117,12 @@ module.exports = function(app, passport) {
                     if (err) throw err;
                     newUser.save(function(err) {
                         if (err) throw err;
+                        console.log('got here');
                         res.redirect('/family');
                     })
                 });
             } else { // no such account exist
+                console.log('no such account');
                 res.redirect('family');
             }
         });

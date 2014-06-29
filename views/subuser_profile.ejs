@@ -64,12 +64,12 @@ var total = $('#total').text().split(' ')[2];
 	var x = Math.ceil(getRandomInt(total/7, total*6/7)/100)*100;
 
 	var data = [ {name: "shopping", value: x},
-	{name: "food", value:  total-x} ];
+	{name: "food", value: (Math.round((total-x) * 100) / 100)} ];
 
 	var set_shopping = document.getElementById('pie_shopping');
 	var set_food = document.getElementById('pie_food');
 	set_shopping.innerHTML = x.toString();
-	set_food.innerHTML = (total-x).toString()
+	set_food.innerHTML = (Math.round((total-x) * 100) / 100).toString()
 
 	var width = 362,
 	height = 384,

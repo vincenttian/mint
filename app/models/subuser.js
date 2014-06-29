@@ -9,7 +9,8 @@ var subUserSchema = mongoose.Schema({
     relation: String,
     password: String,
     primary_account: String,
-    primary_user_email: String
+    primary_user_email: String,
+    primary_account_name: String
 });
 
 // create the model for users and expose it to our app

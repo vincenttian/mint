@@ -4,6 +4,7 @@
 	<title>Mint Family</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<style>
 		body 		{ padding-top:80px; word-wrap:break-word; }
 	</style>
@@ -32,7 +33,8 @@
 		   <p><strong> Name:</strong> <%= fam_members[i].name %></p> 
 		   <p>Relation: <%= fam_members[i].relation %></p>
 		   <p>user_email: <%= fam_members[i].user_email %></p>
-		   <p>primary_account: <%= fam_members[i].primary_account %></p>
+		   <p>primary_account ID: <%= fam_members[i].primary_account %></p>
+		   <p>primary_account: <%= fam_members[i].primary_account_name %></p>
 		   <br>
 		<% } %>
 
@@ -49,12 +51,19 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" placeholder="Enter password" required/>
             <br>
-            <label for="primary_account_no">Account Number::</label>
-            <input type="text" id="primary_account_no" name="primary_account_no" placeholder="Enter a account number" required/>
+            <label for="primary_account_no">Account Number:</label>
+            <select id="account_choices" name="account_no">
+			</select>
             <br>
             <input type="submit" value="Add family member" />
 		</form>
 	</div>
 </div>
 </body>
+<script>
+var accounts = <%- accounts %>;
+for (var i=0; i<accounts.length; i++) {
+	$('#account_choices').append('<option value='+ accounts[i].id + ':' + accounts[i].financial_institution_name.replace(/\s+/g, '') + ':' + accounts[i].account_name.replace(/\s+/g, '') + '>' + accounts[i].financial_institution_name + ': ' + accounts[i].account_name + '</option>');
+}
+</script>
 </html>

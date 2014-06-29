@@ -57,6 +57,7 @@ console.log('The magic happens on port ' + port);
 // MongoClient.connect("mongodb://localhost:27017/mint", function(err, db) {
 //     if (!err) {
 //         console.log("MongoDB is connected");
+
 //     }
 // });
 

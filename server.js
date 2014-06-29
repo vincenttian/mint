@@ -52,8 +52,8 @@ console.log('The magic happens on port ' + port);
 // });
 
 // Production
-var mongoUri = process.env.MONGOLAB_URI ||
-    'mongodb://localhost:27017/mint';
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/mint';
+console.log(mongoUri);
 mongoose.connect(mongoUri);
 var mongo = require('mongodb');
 mongo.Db.connect(mongoUri, function(err, db) {

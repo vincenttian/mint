@@ -36,6 +36,41 @@ module.exports = function(app, passport) {
         });
     });
 
+    app.get('/budgets/:subuserName', isLoggedIn, function(req, res) {
+        Subuser.find({
+            'name': req.params.subuserName
+        }, function(err, fam_member) {
+            if (err) throw (err);
+            Budget.find({
+                'user_email': fam_member.user_email
+            }, function(err, budgets) {
+                if (err) return done(err);
+                res.render('user_edit_budget.ejs', {
+                    user: req.user,
+                    budgets: budgets
+                });
+            });
+        });
+    });
+
+    app.post('/edit_budget', isLoggedIn, function(req, res) {
+        Subuser.find({
+            'name': req.headers.referer.split('/')[4]
+        }, function(err, subuser) {
+            if (err) throw (err);
+            var newBudget = new Budget();
+            newBudget.name = req.body.name;
+            newBudget.picture_url = req.body.picture;
+            newBudget.amount = req.body.amount;
+            newBudget.subuser_email = subuser[0].user_email;
+            newBudget.added_by = req.user.local.email;
+            newBudget.save(function(err) {
+                if (err) throw err;
+                res.redirect('/budgets/' + req.headers.referer.split('/')[4]);
+            })
+        });
+    });
+
     app.get('/goals', isLoggedIn, function(req, res) {
         Subuser.find({
             'primary_user_email': req.user.local.email

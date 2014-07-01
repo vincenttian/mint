@@ -90,6 +90,42 @@ module.exports = function(app, passport) {
         });
     });
 
+    app.get('/goals/:subuserName', isLoggedIn, function(req, res) {
+        Subuser.find({
+            'name': req.params.subuserName
+        }, function(err, fam_member) {
+            if (err) throw (err);
+            Goal.find({
+                'user_email': fam_member.user_email
+            }, function(err, goals) {
+                if (err) return done(err);
+                res.render('user_edit_goal.ejs', {
+                    user: req.user,
+                    goals: goals
+                });
+            });
+        });
+    });
+
+    app.post('/edit_goal', isLoggedIn, function(req, res) {
+        Subuser.find({
+            'name': req.headers.referer.split('/')[4]
+        }, function(err, subuser) {
+            if (err) throw (err);
+            var newGoal = new Goal();
+            newGoal.name = req.body.name;
+            newGoal.picture_url = req.body.picture;
+            newGoal.amount = req.body.amount;
+            newGoal.description = req.body.description;
+            newGoal.subuser_email = subuser[0].user_email;
+            newGoal.added_by = req.user.local.email;
+            newGoal.save(function(err) {
+                if (err) throw err;
+                res.redirect('/goals/' + req.headers.referer.split('/')[4]);
+            })
+        });
+    });
+
     app.get('/subuser_budgets', isLoggedIn, function(req, res) {
         Budget.find({
             'subuser_email': req.user.local.email

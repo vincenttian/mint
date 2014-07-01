@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+	<title>Mint Family</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+</head>
+<body style="background-color:#f2f9f6">
+<div class="container">
+	<div class="row">
+		<div class="col-sm-3 col-md-2">
+			<br><br><br>
+			<img src="img/mint_family.png" class="img-responsive" style="margin-left:auto; margin-right: auto;">
+		</div>
+		<div class="page-header text-center col-md-6">
+			<br>
+		</div>
+		<div class="col-sm-3 col-md-3">
+			<br><br><br><br><br><br>
+			Welcome, <%= user.local.email %>
+		</div>
+		<div class="col-sm-3 col-md-1">
+			<br><br><br><br><br><br>
+			<a href="/logout">Logout</a>
+		</div>
+	</div>
+	<ul class="nav nav-tabs">
+	    <li><a href="/profile">Account</a></li>
+	    <li class="active"><a href="/subuser_budgets">Budgets</a></li>
+	    <li><a href="/subuser_goals">Goals</a></li>
+	    <li><a href="/subuser_family">Family</a></li>
+	</ul>
+	<div class="row" style="background-color:white">
+		<h3>Budget Stuff</h3>
+		<% for(var i=0; i<goals.length; i++) {%>
+		   <img src="<%= goals[i].picture_url %>" height="42" width="42"><br>
+		   <span><strong> Budget:</strong> <%= goals[i].name %></span> <br>
+		   <span>Amount: <%= goals[i].amount %> dollars</span><br>
+		   <span>Added by: <%= goals[i].added_by %> </span>
+		   <br><br>
+		<% } %>
+		Add a goal!
+		<form action="/edit_goal" method="post">
+			<label for="name">Name:</label>
+		    <input type="text" id="name" name="name" placeholder="Enter full name" required/>
+		    <br>
+		    <label for="description">Description:</label>
+		    <input type="text" id="description" name="description" placeholder="Enter description" required/>
+		    <br>
+		    <label for="amount">Goal Amount:</label>
+		    <input type="text" id="amount" name="amount" placeholder="Enter a dollar amount" required/>
+		    <br>
+		    <label for="picture">Goal Picture:</label>
+		    <input type="text" id="picture" name="picture" placeholder="Enter link to picture" required/>
+		    <br>
+		    <input type="submit" value="Add a budget!" />
+		</form>
+	</div>
+</div>
+</body>
+</html>

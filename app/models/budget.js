@@ -7,7 +7,8 @@ var budgetSchema = mongoose.Schema({
     name: String,
     picture_url: String,
     amount: String,
-    subuser_email: String
+    subuser_email: String,
+    added_by: String
 });
 
 // create the model for users and expose it to our app

@@ -73,6 +73,7 @@ module.exports = function(app, passport) {
         newBudget.picture_url = req.body.picture;
         newBudget.amount = req.body.amount;
         newBudget.subuser_email = req.user.local.email;
+        newBudget.added_by = req.user.local.email;
         newBudget.save(function(err) {
             if (err) throw err;
             console.log('got to save');
@@ -132,6 +133,7 @@ module.exports = function(app, passport) {
         newGoal.picture_url = req.body.picture;
         newGoal.amount = req.body.amount;
         newGoal.subuser_email = req.user.local.email;
+        newBudget.added_by = req.user.local.email;
         newGoal.save(function(err) {
             if (err) throw err;
             console.log('got to save');

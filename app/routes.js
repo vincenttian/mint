@@ -76,8 +76,7 @@ module.exports = function(app, passport) {
         newBudget.added_by = req.user.local.email;
         newBudget.save(function(err) {
             if (err) throw err;
-            console.log('got to save');
-            res.redirect('/subuser_goals');
+            res.redirect('/subuser_budgets');
         })
     });
 
@@ -133,10 +132,9 @@ module.exports = function(app, passport) {
         newGoal.picture_url = req.body.picture;
         newGoal.amount = req.body.amount;
         newGoal.subuser_email = req.user.local.email;
-        newBudget.added_by = req.user.local.email;
+        newGoal.added_by = req.user.local.email;
         newGoal.save(function(err) {
             if (err) throw err;
-            console.log('got to save');
             res.redirect('/subuser_goals');
         })
     });

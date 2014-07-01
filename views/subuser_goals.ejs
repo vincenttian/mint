@@ -40,11 +40,11 @@
 		   <img src="<%= goals[i].picture_url %>" height="42" width="42"><br>
 		   <span><strong> Goal:</strong> <%= goals[i].name %></span> <br>
 		   <span>Description: <%= goals[i].description %></span><br>
-		   <span>Amount: <%= goals[i].amount %> dollars</span>
+		   <span>Amount: <%= goals[i].amount %> dollars</span><br>
 		   <span>Added by: <%= goals[i].added_by %> </span>
 		   <br><br>
 		<% } %>
-
+		Add a goal!
 		<form action="/subuser_goals" method="post">
 			<label for="name">Name:</label>
             <input type="text" id="name" name="name" placeholder="Enter full name" required/>

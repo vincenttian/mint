@@ -147,15 +147,13 @@ module.exports = function(app, passport) {
                     if (err) throw err;
                     newUser.save(function(err) {
                         if (err) throw err;
-                        console.log('setup mailer here');
-
                         // setup e-mail data with unicode symbols
                         var mailOptions = {
                             from: "Mint Family <vincenttian16@gmail.com>", // sender address
                             to: newUser.local.email.toLowerCase(), // list of receivers
                             subject: "Welcome to Mint Family!", // Subject line
                             text: "At Mint Family, we welcome users to really work with their money.", // plaintext body
-                            html: "<b>At Mint Family, we welcome users to really work with their money. " + newSubUser.primary_user_email + " has signed you up with Mint Family to better manage your finances. Your login email is " + newSubUser.user_email + " and your password is " + newSubUser.password + ". Sign in at mintfamily.herokuapp.com to view your account, " + newSubUser.primary_account_name + "!</b>" // html body
+                            html: "At Mint Family, we welcome users to really work with their money. " + newSubUser.primary_user_email + " has signed you up with Mint Family to better manage your finances. Your login email is " + newSubUser.user_email + " and your password is " + newSubUser.password + ". Sign in at mintfamily.herokuapp.com to view your account, " + newSubUser.primary_account_name + "!" // html body
                         }
 
                         // send mail with defined transport object

@@ -2,6 +2,7 @@ var Account = require('../app/models/account');
 var Subuser = require('../app/models/subuser');
 var User = require('../app/models/user');
 var Goal = require('../app/models/goal');
+var Budget = require('../app/models/budget');
 
 // Node mailer
 var mailerModule = require('../config/mailer');
@@ -55,9 +56,28 @@ module.exports = function(app, passport) {
     });
 
     app.get('/subuser_budgets', isLoggedIn, function(req, res) {
-        res.render('subuser_budgets.ejs', {
-            user: req.user,
-        });
+        Budget.find({
+            'subuser_email': req.user.local.email
+        }, function(err, budgets) {
+            if (err) throw err;
+            res.render('subuser_budgets.ejs', {
+                user: req.user,
+                budgets: budgets
+            });
+        })
+    });
+
+    app.post('/subuser_budgets', isLoggedIn, function(req, res) {
+        var newBudget = new Budget();
+        newBudget.name = req.body.name;
+        newBudget.picture_url = req.body.picture;
+        newBudget.amount = req.body.amount;
+        newBudget.subuser_email = req.user.local.email;
+        newBudget.save(function(err) {
+            if (err) throw err;
+            console.log('got to save');
+            res.redirect('/subuser_goals');
+        })
     });
 
     app.get('/subuser_family', isLoggedIn, function(req, res) {

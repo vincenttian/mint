@@ -35,7 +35,26 @@
 	</ul>
 	<div class="row" style="background-color:white">
 		<h3>Budget Stuff</h3>
+		<% for(var i=0; i<budgets.length; i++) {%>
+		   <img src="<%= budgets[i].picture_url %>" height="42" width="42"><br>
+		   <span><strong> Budget:</strong> <%= budgets[i].name %></span> <br>
+		   <span>Amount: <%= budgets[i].amount %> dollars</span>
+		   <br><br>
+		<% } %>
 	</div>
+	Add a budget!
+	<form action="/subuser_budgets" method="post">
+		<label for="name">Category:</label>
+	    <input type="text" id="name" name="name" placeholder="Enter full name" required/>
+	    <br>
+	    <label for="amount">Budget Amount:</label>
+	    <input type="text" id="amount" name="amount" placeholder="Enter a dollar amount" required/>
+	    <br>
+	    <label for="picture">Budget Picture:</label>
+	    <input type="text" id="picture" name="picture" placeholder="Enter link to picture" required/>
+	    <br>
+	    <input type="submit" value="Add a budget!" />
+	</form>
 </div>
 </body>
 </html>

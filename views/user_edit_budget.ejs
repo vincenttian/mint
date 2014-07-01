@@ -34,7 +34,7 @@
 	    <li><a href="/family">Family</a></li>
 	</ul>
 	<div class="row" style="background-color:white">
-		<h3>Budget Stuff</h3>
+		<h3>Budgets of <%= person %></h3>
 		<% for(var i=0; i<budgets.length; i++) {%>
 		   <img src="<%= budgets[i].picture_url %>" height="42" width="42"><br>
 		   <span><strong> Budget:</strong> <%= budgets[i].name %></span> <br>
@@ -42,7 +42,7 @@
 		   <span>Added by: <%= budgets[i].added_by %> </span>
 		   <br><br>
 		<% } %>
-		Add a budget!
+		Add a budget for <%= person %>!
 		<form action="/edit_budget" method="post">
 			<label for="name">Category:</label>
 		    <input type="text" id="name" name="name" placeholder="Enter full name" required/>

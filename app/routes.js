@@ -47,7 +47,8 @@ module.exports = function(app, passport) {
                 if (err) return done(err);
                 res.render('user_edit_budget.ejs', {
                     user: req.user,
-                    budgets: budgets
+                    budgets: budgets,
+                    person: req.params.subuserName
                 });
             });
         });
@@ -101,7 +102,8 @@ module.exports = function(app, passport) {
                 if (err) return done(err);
                 res.render('user_edit_goal.ejs', {
                     user: req.user,
-                    goals: goals
+                    goals: goals,
+                    person: req.params.subuserName
                 });
             });
         });

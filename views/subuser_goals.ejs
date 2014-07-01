@@ -35,7 +35,34 @@
 	</ul>
 	<div class="row" style="background-color:white">
 		<h3>Goal Stuff</h3>
+
+		<% for(var i=0; i<goals.length; i++) {%>
+		   <img src="<%= goals[i].picture_url %>" height="42" width="42"><br>
+		   <span><strong> Goal:</strong> <%= goals[i].name %></span> <br>
+		   <span>Description: <%= goals[i].description %></span><br>
+		   <span>Amount: <%= goals[i].amount %> dollars</span>
+		   <br><br>
+		<% } %>
+
+		<form action="/subuser_goals" method="post">
+			<label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter full name" required/>
+            <br>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" placeholder="Description for goal" required/>
+            <br>
+            <label for="picture">Picture URL:</label>
+            <input type="text" id="picture" name="picture" placeholder="Enter link to picture" required/>
+            <br>
+            <label for="amount">Goal Amount:</label>
+            <input type="text" id="amount" name="amount" placeholder="Enter link to picture" required/>
+            <br>
+            <input type="submit" value="Add a goal!" />
+		</form>
 	</div>
 </div>
 </body>
+<script>
+
+</script>
 </html>

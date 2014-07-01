@@ -113,6 +113,8 @@ var total = $('#total').text().split(' ')[2];
 	.enter().append("g")
 	.attr("class", "arc");
 
+	console.log('got here');
+
 	g.append("path")
 	.style("fill", function(d) { return color(d.data.name); })
 	.style("stroke", "#fff")

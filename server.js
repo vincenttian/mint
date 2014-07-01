@@ -42,26 +42,26 @@ console.log('The magic happens on port ' + port);
 // database ====================================================================
 
 // Development to seed prod database
-var dev_seed_prod = 'mongodb://heroku_app26861824:j34qq9lk4u8v3n6avl7p3nu4en@ds043467.mongolab.com:43467/heroku_app26861824';
-mongoose.connect(dev_seed_prod);
-var MongoClient = require('mongodb').MongoClient;
-MongoClient.connect(dev_seed_prod, function(err, db) {
-    if (!err) {
-        console.log("MongoDB is connected");
-    }
-});
+// var dev_seed_prod = 'mongodb://heroku_app26861824:j34qq9lk4u8v3n6avl7p3nu4en@ds043467.mongolab.com:43467/heroku_app26861824';
+// mongoose.connect(dev_seed_prod);
+// var MongoClient = require('mongodb').MongoClient;
+// MongoClient.connect(dev_seed_prod, function(err, db) {
+//     if (!err) {
+//         console.log("MongoDB is connected");
+//     }
+// });
 
 // Production
-// var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/mint';
-// console.log(mongoUri);
-// mongoose.connect(mongoUri);
-// var mongo = require('mongodb');
-// mongo.Db.connect(mongoUri, function(err, db) {
-//     db.collection('mydocs', function(er, collection) {
-//         collection.insert({
-//             'mykey': 'myvalue'
-//         }, {
-//             safe: true
-//         }, function(er, rs) {});
-//     });
-// });
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/mint';
+console.log(mongoUri);
+mongoose.connect(mongoUri);
+var mongo = require('mongodb');
+mongo.Db.connect(mongoUri, function(err, db) {
+    db.collection('mydocs', function(er, collection) {
+        collection.insert({
+            'mykey': 'myvalue'
+        }, {
+            safe: true
+        }, function(er, rs) {});
+    });
+});

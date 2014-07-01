@@ -1,6 +1,7 @@
 var Account = require('../app/models/account');
 var Subuser = require('../app/models/subuser');
 var User = require('../app/models/user');
+var Goal = require('../app/models/goal');
 
 // Node mailer
 var mailerModule = require('../config/mailer');
@@ -92,9 +93,30 @@ module.exports = function(app, passport) {
     });
 
     app.get('/subuser_goals', isLoggedIn, function(req, res) {
-        res.render('subuser_goals.ejs', {
-            user: req.user,
-        });
+        Goal.find({
+            'subuser_email': req.user.local.email
+        }, function(err, goals) {
+            if (err) throw err;
+            res.render('subuser_goals.ejs', {
+                user: req.user,
+                str_goals: JSON.stringify(goals),
+                goals: goals
+            });
+        })
+    });
+
+    app.post('/subuser_goals', isLoggedIn, function(req, res) {
+        var newGoal = new Goal();
+        newGoal.name = req.body.name;
+        newGoal.description = req.body.description;
+        newGoal.picture_url = req.body.picture;
+        newGoal.amount = req.body.amount;
+        newGoal.subuser_email = req.user.local.email;
+        newGoal.save(function(err) {
+            if (err) throw err;
+            console.log('got to save');
+            res.redirect('/subuser_goals');
+        })
     });
 
     app.get('/family', isLoggedIn, function(req, res) {

@@ -318,12 +318,26 @@ module.exports = function(app, passport) {
                     'id': subuser.primary_account
                 }, function(err, account) {
                     if (err) return done(err);
-                    res.render('subuser_profile.ejs', {
-                        user: req.user,
-                        account: account
-                    })
-                })
-            })
+                    Goal.find({
+                        'subuser_email': req.user.local.email
+                    }, function(err, goals) {
+                        if (err) return done(err);
+                        Budget.find({
+                            'subuser_email': req.user.local.email
+                        }, function(err, budgets) {
+                            if (err) return done(err);
+                            res.render('subuser_profile.ejs', {
+                                user: req.user,
+                                account: account,
+                                goals: goals,
+                                budgets: budgets,
+                                str_goals: JSON.stringify(goals),
+                                str_budgets: JSON.stringify(budgets)
+                            });
+                        });
+                    });
+                });
+            });
         }
     });
 

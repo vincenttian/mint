@@ -126,7 +126,7 @@ module.exports = function(app, passport) {
 
     app.post('/family', isLoggedIn, function(req, res) {
         var newSubUser = new Subuser();
-        newSubUser.user_email = req.body.email;
+        newSubUser.user_email = req.body.email.toLowerCase();
         newSubUser.name = req.body.name;
         newSubUser.relation = req.body.relation;
         newSubUser.password = req.body.password;
@@ -140,7 +140,7 @@ module.exports = function(app, passport) {
             if (err) return done(err);
             if (account.length > 0) {
                 var newUser = new User();
-                newUser.local.email = req.body.email;
+                newUser.local.email = req.body.email.toLowerCase();
                 newUser.local.password = newUser.generateHash(req.body.password);
                 newUser.local.subuser = true;
                 newSubUser.save(function(err) {
@@ -151,11 +151,11 @@ module.exports = function(app, passport) {
 
                         // setup e-mail data with unicode symbols
                         var mailOptions = {
-                            from: "Mint Family ✔ <vincenttian16@gmail.com>", // sender address
-                            to: newUser.local.email, // list of receivers
+                            from: "Mint Family <vincenttian16@gmail.com>", // sender address
+                            to: newUser.local.email.toLowerCase(), // list of receivers
                             subject: "Welcome to Mint Family!", // Subject line
                             text: "At Mint Family, we welcome users to really work with their money.", // plaintext body
-                            html: "<b>At Mint Family, we welcome users to really work with their money. " + newSubUser.primary_user_email + " has signed you up with Mint Family to better manage your finances. Your login email is " + newSubUser.local.email + " and your password is " + newSubUser.local.password + ". Sign in at mintfamily.herokuapp.com!</b>" // html body
+                            html: "<b>At Mint Family, we welcome users to really work with their money. " + newSubUser.primary_user_email + " has signed you up with Mint Family to better manage your finances. Your login email is " + newSubUser.user_email + " and your password is " + newSubUser.password + ". Sign in at mintfamily.herokuapp.com to view your account, " + newSubUser.primary_account_name + "!</b>" // html body
                         }
 
                         // send mail with defined transport object
@@ -198,7 +198,7 @@ module.exports = function(app, passport) {
             });
         } else {
             Subuser.findOne({
-                'user_email': req.user.local.email
+                'user_email': req.user.local.email.toLowerCase()
             }, function(err, subuser) {
                 if (err) return done(err);
                 Account.findOne({

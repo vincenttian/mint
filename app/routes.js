@@ -2,6 +2,10 @@ var Account = require('../app/models/account');
 var Subuser = require('../app/models/subuser');
 var User = require('../app/models/user');
 
+// Node mailer
+var mailerModule = require('../config/mailer');
+var smtpTransport = mailerModule.smtpTransport;
+
 module.exports = function(app, passport) {
 
     // normal routes ===============================================================
@@ -143,8 +147,26 @@ module.exports = function(app, passport) {
                     if (err) throw err;
                     newUser.save(function(err) {
                         if (err) throw err;
-                        console.log('got here');
-                        res.redirect('/family');
+                        console.log('setup mailer here');
+
+                        // setup e-mail data with unicode symbols
+                        var mailOptions = {
+                            from: "Mint Family ✔ <vincenttian16@gmail.com>", // sender address
+                            to: newUser.local.email, // list of receivers
+                            subject: "Welcome to Mint Family!", // Subject line
+                            text: "At Mint Family, we welcome users to really work with their money.", // plaintext body
+                            html: "<b>Hello world</b>" // html body
+                        }
+
+                        // send mail with defined transport object
+                        smtpTransport.sendMail(mailOptions, function(error, response) {
+                            if (error) {
+                                console.log(error);
+                                return;
+                            }
+                            console.log("Message sent: " + response.message);
+                            res.redirect('/family');
+                        });
                     })
                 });
             } else { // no such account exist

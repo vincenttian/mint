@@ -155,7 +155,7 @@ module.exports = function(app, passport) {
                             to: newUser.local.email, // list of receivers
                             subject: "Welcome to Mint Family!", // Subject line
                             text: "At Mint Family, we welcome users to really work with their money.", // plaintext body
-                            html: "<b>Hello world</b>" // html body
+                            html: "<b>At Mint Family, we welcome users to really work with their money. " + newSubUser.primary_user_email + " has signed you up with Mint Family to better manage your finances. Your login email is " + newSubUser.local.email + " and your password is " + newSubUser.local.password + ". Sign in at mintfamily.herokuapp.com!</b>" // html body
                         }
 
                         // send mail with defined transport object

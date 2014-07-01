@@ -9,14 +9,27 @@
 	</style>
 </head>
 <body background="img/background.png">
-Welcome, <%= user.local.email %>
 <div class="container">
-	<div class="page-header text-center">
-		<h1> Profile Page</h1>
-		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+	<div class="row">
+		<div class="col-sm-3 col-md-2">
+			<br><br><br>
+			<img src="img/mint_family.png" class="img-responsive" style="margin-left:auto; margin-right: auto;">
+		</div>
+		<div class="page-header text-center col-md-7">
+			<br>
+			<h1> Budget Page</h1>
+		</div>
+		<div class="col-sm-3 col-md-2">
+			<br><br><br><br><br>
+			Welcome, <%= user.local.email %>
+		</div>
+		<div class="col-sm-3 col-md-1">
+			<br><br><br><br><br><br>
+			<a href="/logout">Logout</a>
+		</div>
 	</div>
 	<ul class="nav nav-tabs">
-	    <li><a href="/profile">Accounts</a></li>
+	    <li><a href="/profile">Account</a></li>
 	    <li class="active"><a href="/subuser_budgets">Budgets</a></li>
 	    <li><a href="/subuser_goals">Goals</a></li>
 	    <li><a href="/subuser_family">Family</a></li>

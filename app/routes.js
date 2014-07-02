@@ -3,6 +3,7 @@ var Subuser = require('../app/models/subuser');
 var User = require('../app/models/user');
 var Goal = require('../app/models/goal');
 var Budget = require('../app/models/budget');
+var BetaUser = require('../app/models/betaUser');
 
 // Node mailer
 var mailerModule = require('../config/mailer');
@@ -15,6 +16,36 @@ module.exports = function(app, passport) {
     // show the home page (will also have our login links)
     app.get('/', function(req, res) {
         res.render('index.ejs');
+    });
+
+    app.get('/beta', function(req, res) {
+        res.render('beta.ejs');
+    });
+
+    app.post('/beta', function(req, res) {
+        var newBetaUser = new BetaUser();
+        newBetaUser.name = req.body.name;
+        newBetaUser.user_email = req.body.email;
+        newBetaUser.save(function(err) {
+            if (err) throw err;
+            var mailOptions = {
+                from: "Mint Family <vincenttian16@gmail.com>", // sender address
+                to: newBetaUser.user_email, // list of receivers
+                subject: "Welcome to Mint Family!", // Subject line
+                text: "At Mint Family, we welcome users to really work with their money.", // plaintext body
+                html: "Hey " + newBetaUser.name + ", <br><br>Thanks for signing up with Mint Family! You have been added to the waiting list for the beta, and we will update you when Mint Family becomes available! <br><br> Best, <br>The Mint Family Team" // html body
+            }
+            // send mail with defined transport object
+            smtpTransport.sendMail(mailOptions, function(error, response) {
+                if (error) throw error;
+                console.log("Message sent: " + response.message);
+                res.redirect('thanks');
+            });
+        })
+    });
+
+    app.get('/thanks', function(req, res) {
+        res.render('thanks.ejs');
     });
 
     app.get('/budgets', isLoggedIn, function(req, res) {

@@ -5,9 +5,26 @@
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<style>
 		body 		{ padding-top:80px; word-wrap:break-word; }
+		.chart div {
+			font: 10px sans-serif;
+			background-color: steelblue;
+			text-align: right;
+			padding: 3px;
+			margin: 1px;
+			color: white;
+		}
+		.chart_one div {
+			font: 10px sans-serif;
+			background-color: steelblue;
+			text-align: right;
+			padding: 3px;
+			margin: 1px;
+			color: white;
+		}
 	</style>
 </head>
 <body style="background-color:#f2f9f6">
@@ -66,103 +83,131 @@
 			</div>
 			<!-- Goal stuff -->
 			<% if (goals.length> 0) { %>
-			    Featured Goal: <%= goals[0].name %> <br>
-			    Amount: $<%= goals[0].amount %> <br>
-			    Description: <%= goals[0].description %> <br>
-			    Currently saved: <span id="curr_goal"> </span> <br>
-			    Current percentage: <span id="curr_percent"> </span><br>
-			    <img src="<%= goals[0].picture_url %>" height="150" width="225">
+			Featured Goal: <%= goals[0].name %> <br>
+			Amount: $<%= goals[0].amount %> <br>
+			Description: <%= goals[0].description %> <br>
+			Currently saved: <span id="curr_goal"> </span> <br>
+			Current percentage: <span id="curr_percent"> </span><br>
+			<img src="<%= goals[0].picture_url %>" height="150" width="225">
 			<% } else { %>
-			    No goals! <a href="/subuser_goals">Add goals!</a>
+			No goals! <a href="/subuser_goals">Add goals!</a>
 			<% } %>
+			<div class="chart_one"></div>
 			<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 			<!-- Budget stuff -->
 			<% if (budgets.length> 0) { %>
-			    Budget: <%= budgets[0].name %> <br>
-			    Amount: $<%= budgets[0].amount %> <br>
-			    Currently spent: <span id="curr_spent"> </span> <br>
-			    Current percentage: <span id="curr_spent_percent"> </span><br>
-			    <img src="<%= budgets[0].picture_url %>" height="42" width="42">
+			Budget: <%= budgets[0].name %> <br>
+			Amount: $<%= budgets[0].amount %> <br>
+			Currently spent: <span id="curr_spent"> </span> <br>
+			Current percentage: <span id="curr_spent_percent"> </span><br>
+			<img src="<%= budgets[0].picture_url %>" height="42" width="42">
 			<% } else { %>
-			    No budgets! <a href="/subuser_budgets">Add a budget!</a>
+			No budgets! <a href="/subuser_budgets">Add a budget!</a>
 			<% } %>
+			<div class="chart"></div>
 			<br><br><br><br><br>
 		</div>
 	</div>
 </body>
 <script>
-if (<%-str_goals%>.length >0) {
-	var goal = <%-str_goals%>[0].amount;
-	var rand = Math.floor(Math.random() * <%-str_goals%>[0].amount) + 1;
-	$('#curr_goal').text('$' + rand.toString());
-	$('#curr_percent').text(Math.round(rand/<%-str_goals%>[0].amount*100) + '%');
-}
-
-if (<%-str_budgets%>.length >0) {
-	var goal = <%-str_budgets%>[0].amount;
-	var rand = Math.floor(Math.random() * <%-str_budgets%>[0].amount) + 1;
-	$('#curr_spent').text('$' + rand.toString());
-	$('#curr_spent_percent').text(Math.round(rand/<%-str_budgets%>[0].amount*100) + '%');
-}
-
-var total = $('#total').text().split(' ')[2];
-total = Number(total);
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-var x = Math.ceil(getRandomInt(total/7, total*6/7)/100)*100;
-
-var data = [ {name: "shopping", value: x},
-{name: "food", value: (Math.round((total-x) * 100) / 100)} ];
-
-var set_shopping = document.getElementById('pie_shopping');
-var set_food = document.getElementById('pie_food');
-set_shopping.innerHTML = x.toString();
-set_food.innerHTML = (Math.round((total-x) * 100) / 100).toString()
-
-var width = 362,
-height = 384,
-radius = Math.min(width, height) / 2;
-
-var chart = d3.select("#chart")
-.append('svg')
-.attr("width", width)
-.attr("height", height)
-.append("g")
-.attr("transform", "translate(" + width / 2 + "," + 96 + ")");
-
-var radius = Math.min(width, height) / 2;
-
-var color = d3.scale.ordinal()
-.range(["#0096ff", "#CCC"]);
-
-var arc = d3.svg.arc()
-.outerRadius(radius - 85)
-.innerRadius(radius - 110);
-
-var pie = d3.layout.pie()
-.sort(null)
-.startAngle(1.1*Math.PI)
-.endAngle(3.1*Math.PI)
-.value(function(d) { return d.value; });
-
-var g = chart.selectAll(".arc")
-.data(pie(data))
-.enter().append("g")
-.attr("class", "arc");
-
-g.append("path")
-.style("fill", function(d) { return color(d.data.name); })
-.style("stroke", "#fff")
-.style("stroke-width", "3px")
-.transition().delay(function(d, i) { return i * 500; }).duration(1000)
-.attrTween('d', function(d) {
-	var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-	return function(t) {
-		d.endAngle = i(t);
-		return arc(d);
+	if (<%-str_goals%>.length >0) {
+		var goal = <%-str_goals%>[0].amount;
+		var rand = Math.floor(Math.random() * <%-str_goals%>[0].amount) + 1;
+		$('#curr_goal').text('$' + rand.toString());
+		$('#curr_percent').text(Math.round(rand/<%-str_goals%>[0].amount*100) + '%');
 	}
-});
+
+	var data = [rand, goal];
+	var x = d3.scale.linear()
+	.domain([0, d3.max(data)])
+	.range([0, 420]);
+
+	// GOAL BAR CHART STUFF
+	d3.select(".chart_one")
+	.selectAll("div")
+	.data(data)
+	.enter().append("div")
+	.style("width", function(d) { return x(d) + "px"; })
+	.text(function(d) { return d; });
+
+	if (<%-str_budgets%>.length >0) {
+		var goal = <%-str_budgets%>[0].amount;
+		var rand = Math.floor(Math.random() * <%-str_budgets%>[0].amount) + 1;
+		$('#curr_spent').text('$' + rand.toString());
+		$('#curr_spent_percent').text(Math.round(rand/<%-str_budgets%>[0].amount*100) + '%');
+	}
+
+	// BUDGET BAR CHART STUFF
+	var data = [rand, goal];
+	var x = d3.scale.linear()
+	.domain([0, d3.max(data)])
+	.range([0, 420]);
+
+	d3.select(".chart")
+	.selectAll("div")
+	.data(data)
+	.enter().append("div")
+	.style("width", function(d) { return x(d) + "px"; })
+	.text(function(d) { return d; });
+
+	// ACCOUNT PIE CHART STUFF
+	var total = $('#total').text().split(' ')[2];
+	total = Number(total);
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	var x = Math.ceil(getRandomInt(total/7, total*6/7)/100)*100;
+
+	var data = [ {name: "shopping", value: x},
+	{name: "food", value: (Math.round((total-x) * 100) / 100)} ];
+
+	var set_shopping = document.getElementById('pie_shopping');
+	var set_food = document.getElementById('pie_food');
+	set_shopping.innerHTML = x.toString();
+	set_food.innerHTML = (Math.round((total-x) * 100) / 100).toString()
+
+	var width = 362,
+	height = 384,
+	radius = Math.min(width, height) / 2;
+
+	var chart = d3.select("#chart")
+	.append('svg')
+	.attr("width", width)
+	.attr("height", height)
+	.append("g")
+	.attr("transform", "translate(" + width / 2 + "," + 96 + ")");
+
+	var radius = Math.min(width, height) / 2;
+
+	var color = d3.scale.ordinal()
+	.range(["#0096ff", "#CCC"]);
+
+	var arc = d3.svg.arc()
+	.outerRadius(radius - 85)
+	.innerRadius(radius - 110);
+
+	var pie = d3.layout.pie()
+	.sort(null)
+	.startAngle(1.1*Math.PI)
+	.endAngle(3.1*Math.PI)
+	.value(function(d) { return d.value; });
+
+	var g = chart.selectAll(".arc")
+	.data(pie(data))
+	.enter().append("g")
+	.attr("class", "arc");
+
+	g.append("path")
+	.style("fill", function(d) { return color(d.data.name); })
+	.style("stroke", "#fff")
+	.style("stroke-width", "3px")
+	.transition().delay(function(d, i) { return i * 500; }).duration(1000)
+	.attrTween('d', function(d) {
+		var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+		return function(t) {
+			d.endAngle = i(t);
+			return arc(d);
+		}
+	});
 </script>
 </html>

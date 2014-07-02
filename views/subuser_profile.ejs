@@ -115,40 +115,38 @@
 		var rand = Math.floor(Math.random() * <%-str_goals%>[0].amount) + 1;
 		$('#curr_goal').text('$' + rand.toString());
 		$('#curr_percent').text(Math.round(rand/<%-str_goals%>[0].amount*100) + '%');
+		// GOAL BAR CHART STUFF
+		var data = [rand, goal];
+		var x = d3.scale.linear()
+		.domain([0, d3.max(data)])
+		.range([0, 420]);
+
+		d3.select(".chart_one")
+		.selectAll("div")
+		.data(data)
+		.enter().append("div")
+		.style("width", function(d) { return x(d) + "px"; })
+		.text(function(d) { return d; });
 	}
-
-	var data = [rand, goal];
-	var x = d3.scale.linear()
-	.domain([0, d3.max(data)])
-	.range([0, 420]);
-
-	// GOAL BAR CHART STUFF
-	d3.select(".chart_one")
-	.selectAll("div")
-	.data(data)
-	.enter().append("div")
-	.style("width", function(d) { return x(d) + "px"; })
-	.text(function(d) { return d; });
 
 	if (<%-str_budgets%>.length >0) {
 		var goal = <%-str_budgets%>[0].amount;
 		var rand = Math.floor(Math.random() * <%-str_budgets%>[0].amount) + 1;
 		$('#curr_spent').text('$' + rand.toString());
 		$('#curr_spent_percent').text(Math.round(rand/<%-str_budgets%>[0].amount*100) + '%');
+		// BUDGET BAR CHART STUFF
+		var data = [rand, goal];
+		var x = d3.scale.linear()
+		.domain([0, d3.max(data)])
+		.range([0, 420]);
+
+		d3.select(".chart")
+		.selectAll("div")
+		.data(data)
+		.enter().append("div")
+		.style("width", function(d) { return x(d) + "px"; })
+		.text(function(d) { return d; });
 	}
-
-	// BUDGET BAR CHART STUFF
-	var data = [rand, goal];
-	var x = d3.scale.linear()
-	.domain([0, d3.max(data)])
-	.range([0, 420]);
-
-	d3.select(".chart")
-	.selectAll("div")
-	.data(data)
-	.enter().append("div")
-	.style("width", function(d) { return x(d) + "px"; })
-	.text(function(d) { return d; });
 
 	// ACCOUNT PIE CHART STUFF
 	var total = $('#total').text().split(' ')[2];

@@ -14,9 +14,9 @@ module.exports = function(app, passport) {
     // normal routes ===============================================================
 
     // show the home page (will also have our login links)
-    // app.get('/', function(req, res) {
-    //     res.render('index.ejs');
-    // });
+    app.get('/', function(req, res) {
+        res.render('index.ejs');
+    });
 
     app.get('/beta', function(req, res) {
         res.render('beta.ejs');
@@ -48,22 +48,6 @@ module.exports = function(app, passport) {
         res.render('thanks.ejs');
     });
 
-    app.use(function(req, res, next) {
-        res.status(404);
-        if (req.accepts('html')) {
-            res.render('404.ejs');
-            return;
-        }
-        if (req.accepts('json')) {
-            res.send({
-                error: 'Not found'
-            });
-            return;
-        }
-        res.type('txt').send('Not found');
-    });
-
-    /*
     app.get('/budgets', isLoggedIn, function(req, res) {
         Subuser.find({
             'primary_user_email': req.user.local.email
@@ -428,7 +412,6 @@ module.exports = function(app, passport) {
         failureRedirect: '/signup', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }));
-    */
 
     // facebook -------------------------------
 
@@ -572,6 +555,22 @@ module.exports = function(app, passport) {
         user.save(function(err) {
             res.redirect('/profile');
         });
+    });
+
+
+    app.use(function(req, res, next) {
+        res.status(404);
+        if (req.accepts('html')) {
+            res.render('404.ejs');
+            return;
+        }
+        if (req.accepts('json')) {
+            res.send({
+                error: 'Not found'
+            });
+            return;
+        }
+        res.type('txt').send('Not found');
     });
 };
 
